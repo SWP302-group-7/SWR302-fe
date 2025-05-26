@@ -38,7 +38,7 @@ const LoginPage: React.FC = () => {
 
         // Validate form
         if (!email || !password) {
-            dispatch(loginFailure('Please fill in all fields'));
+            dispatch(loginFailure('Vui lòng điền đầy đủ thông tin'));
             return;
         }
 
@@ -66,11 +66,11 @@ const LoginPage: React.FC = () => {
 
                     navigate('/app/profile');
                 } else {
-                    dispatch(loginFailure('Invalid email or password'));
+                    dispatch(loginFailure('Email hoặc mật khẩu không chính xác'));
                 }
             }, 1000);
         } catch (error) {
-            dispatch(loginFailure('An error occurred. Please try again.'));
+            dispatch(loginFailure('Đã xảy ra lỗi. Vui lòng thử lại.'));
         }
     };
 
@@ -91,7 +91,7 @@ const LoginPage: React.FC = () => {
                 <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-                Sign In
+                Đăng Nhập
             </Typography>
 
             {error && (
@@ -106,7 +106,7 @@ const LoginPage: React.FC = () => {
                     required
                     fullWidth
                     id="email"
-                    label="Email Address"
+                    label="Địa chỉ Email"
                     name="email"
                     autoComplete="email"
                     autoFocus
@@ -119,7 +119,7 @@ const LoginPage: React.FC = () => {
                     required
                     fullWidth
                     name="password"
-                    label="Password"
+                    label="Mật khẩu"
                     type={showPassword ? 'text' : 'password'}
                     id="password"
                     autoComplete="current-password"
@@ -150,7 +150,7 @@ const LoginPage: React.FC = () => {
                             disabled={isLoading}
                         />
                     }
-                    label="Remember me"
+                    label="Ghi nhớ đăng nhập"
                 />
                 <Button
                     type="submit"
@@ -159,21 +159,21 @@ const LoginPage: React.FC = () => {
                     sx={{ mt: 3, mb: 2 }}
                     disabled={isLoading}
                 >
-                    {isLoading ? <CircularProgress size={24} /> : 'Sign In'}
+                    {isLoading ? <CircularProgress size={24} /> : 'Đăng Nhập'}
                 </Button>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Link component={RouterLink} to="/auth/reset-password" variant="body2">
-                        Forgot password?
+                        Quên mật khẩu?
                     </Link>
                     <Link component={RouterLink} to="/auth/register" variant="body2">
-                        {"Don't have an account? Sign Up"}
+                        {"Chưa có tài khoản? Đăng ký ngay"}
                     </Link>
                 </Box>
             </Box>
 
             <Box sx={{ mt: 4, width: '100%' }}>
                 <Typography variant="body2" color="text.secondary" align="center">
-                    Demo credentials: demo@example.com / password
+                    Tài khoản demo: demo@example.com / password
                 </Typography>
             </Box>
         </Box>

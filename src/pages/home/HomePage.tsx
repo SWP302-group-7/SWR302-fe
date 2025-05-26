@@ -36,11 +36,11 @@ const HomePage: React.FC = () => {
                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4, alignItems: 'center' }}>
                         <Box sx={{ flex: 1 }}>
                             <Typography variant="h3" component="h1" gutterBottom>
-                                Inclusive Healthcare for All Gender Identities
+                                Chăm Sóc Sức Khỏe Toàn Diện Cho Mọi Bản Dạng Giới
                             </Typography>
                             <Typography variant="h6" paragraph>
-                                We provide specialized healthcare services in a safe, affirming environment
-                                that respects and celebrates gender diversity.
+                                Chúng tôi cung cấp các dịch vụ chăm sóc sức khỏe chuyên biệt trong môi trường an toàn,
+                                tôn trọng và tôn vinh sự đa dạng giới tính.
                             </Typography>
                             <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
                                 <Button
@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
                                     to="/services"
                                     endIcon={<ArrowForwardIcon />}
                                 >
-                                    Our Services
+                                    Dịch Vụ Của Chúng Tôi
                                 </Button>
                                 <Button
                                     variant="outlined"
@@ -60,7 +60,7 @@ const HomePage: React.FC = () => {
                                     component={RouterLink}
                                     to="/auth/register"
                                 >
-                                    Join Us
+                                    Tham Gia Ngay
                                 </Button>
                             </Stack>
                         </Box>
@@ -68,7 +68,7 @@ const HomePage: React.FC = () => {
                             <Box
                                 component="img"
                                 src="/diverse-group.jpg"
-                                alt="Diverse group of people"
+                                alt="Nhóm người đa dạng"
                                 sx={{
                                     width: '100%',
                                     borderRadius: 2,
@@ -84,15 +84,15 @@ const HomePage: React.FC = () => {
             {/* Services Overview */}
             <Container maxWidth="lg" sx={{ my: 8 }}>
                 <Typography variant="h4" component="h2" align="center" gutterBottom>
-                    Our Services
+                    Dịch Vụ Của Chúng Tôi
                 </Typography>
                 <Typography variant="subtitle1" align="center" color="text.secondary" paragraph sx={{ mb: 6 }}>
-                    Comprehensive gender-affirming healthcare services
+                    Các dịch vụ chăm sóc sức khỏe khẳng định giới tính toàn diện
                 </Typography>
 
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 4, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
                     {services.map((service) => (
-                        <Box key={service.title} sx={{ width: { xs: '100%', sm: 'calc(50% - 16px)', md: 'calc(33.333% - 16px)' } }}>
+                        <Box key={service.title} sx={{ width: { xs: '100%', sm: 'calc(50% - 16px)', md: '33.333%' } }}>
                             <Card
                                 sx={{
                                     height: '100%',
@@ -125,7 +125,7 @@ const HomePage: React.FC = () => {
                                         to={service.link}
                                         endIcon={<ArrowForwardIcon />}
                                     >
-                                        Learn More
+                                        Tìm hiểu thêm
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -138,18 +138,18 @@ const HomePage: React.FC = () => {
             <Box sx={{ bgcolor: 'background.paper', py: 8 }}>
                 <Container maxWidth="lg">
                     <Typography variant="h4" component="h2" align="center" gutterBottom>
-                        Why Choose Us
+                        Tại Sao Chọn Chúng Tôi
                     </Typography>
                     <Typography variant="subtitle1" align="center" color="text.secondary" paragraph sx={{ mb: 6 }}>
-                        Our commitment to quality care and inclusive services
+                        Cam kết của chúng tôi về chăm sóc chất lượng và dịch vụ toàn diện
                     </Typography>
 
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 4, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
                         {features.map((feature) => (
                             <Box
                                 key={feature.title}
                                 sx={{
-                                    width: { xs: '100%', md: 'calc(33.333% - 16px)' },
+                                    width: { xs: '100%', sm: 'calc(50% - 16px)', md: '33.333%' },
                                     textAlign: 'center',
                                     p: 2
                                 }}
@@ -178,10 +178,10 @@ const HomePage: React.FC = () => {
             {/* CTA Section */}
             <Container maxWidth="md" sx={{ my: 8, textAlign: 'center' }}>
                 <Typography variant="h4" component="h2" gutterBottom>
-                    Ready to Get Started?
+                    Sẵn Sàng Bắt Đầu?
                 </Typography>
                 <Typography variant="body1" paragraph color="text.secondary">
-                    Join our community of patients and experience healthcare designed for your unique needs.
+                    Tham gia cộng đồng bệnh nhân của chúng tôi và trải nghiệm dịch vụ chăm sóc sức khỏe được thiết kế riêng cho nhu cầu đặc biệt của bạn.
                 </Typography>
                 <Button
                     variant="contained"
@@ -191,7 +191,7 @@ const HomePage: React.FC = () => {
                     to="/auth/register"
                     sx={{ mt: 2 }}
                 >
-                    Create an Account
+                    Tạo Tài Khoản
                 </Button>
             </Container>
         </Box>
@@ -201,20 +201,20 @@ const HomePage: React.FC = () => {
 // Sample data
 const services = [
     {
-        title: 'Gender-Affirming Care',
-        description: 'Comprehensive services including hormone therapy, surgical consultations, and voice therapy.',
+        title: 'Chăm Sóc Khẳng Định Giới Tính',
+        description: 'Dịch vụ toàn diện bao gồm liệu pháp hormone, tư vấn phẫu thuật và luyện giọng nói.',
         image: '/service-1.svg',
         link: '/services#gender-affirming',
     },
     {
-        title: 'Mental Health Support',
-        description: 'Counseling and therapy services specialized for gender-related experiences and transitions.',
+        title: 'Hỗ Trợ Sức Khỏe Tâm Thần',
+        description: 'Dịch vụ tư vấn và trị liệu chuyên biệt cho các trải nghiệm và quá trình chuyển đổi giới tính.',
         image: '/service-2.svg',
         link: '/services#mental-health',
     },
     {
-        title: 'Primary Healthcare',
-        description: 'Regular check-ups, preventive care, and general health services in an affirming environment.',
+        title: 'Chăm Sóc Sức Khỏe Cơ Bản',
+        description: 'Khám sức khỏe định kỳ, chăm sóc dự phòng và các dịch vụ y tế chung trong môi trường tôn trọng.',
         image: '/service-3.svg',
         link: '/services#primary-care',
     },
@@ -222,18 +222,18 @@ const services = [
 
 const features = [
     {
-        title: 'Easy Appointment Booking',
-        description: 'Schedule appointments online at your convenience with our user-friendly booking system.',
+        title: 'Đặt Lịch Hẹn Dễ Dàng',
+        description: 'Lên lịch hẹn trực tuyến thuận tiện với hệ thống đặt lịch thân thiện với người dùng của chúng tôi.',
         icon: <CalendarIcon sx={{ fontSize: 50, color: 'primary.main' }} />,
     },
     {
-        title: 'Expert Consultations',
-        description: 'Access specialized knowledge through our online consultation service with experienced healthcare providers.',
+        title: 'Tư Vấn Chuyên Gia',
+        description: 'Tiếp cận kiến thức chuyên môn thông qua dịch vụ tư vấn trực tuyến với các chuyên gia y tế giàu kinh nghiệm.',
         icon: <ForumIcon sx={{ fontSize: 50, color: 'primary.main' }} />,
     },
     {
-        title: 'Inclusive Care',
-        description: 'Experience healthcare that respects your identity and addresses your specific needs with dignity.',
+        title: 'Chăm Sóc Toàn Diện',
+        description: 'Trải nghiệm dịch vụ chăm sóc sức khỏe tôn trọng bản dạng và đáp ứng nhu cầu cụ thể của bạn một cách đầy tôn trọng.',
         icon: <HealingIcon sx={{ fontSize: 50, color: 'primary.main' }} />,
     },
 ];
