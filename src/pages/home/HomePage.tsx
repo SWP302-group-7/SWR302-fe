@@ -67,7 +67,7 @@ const HomePage: React.FC = () => {
                         <Box sx={{ flex: 1 }}>
                             <Box
                                 component="img"
-                                src="/hero-image.jpg"
+                                src="/diverse-group.jpg"
                                 alt="Diverse group of people"
                                 sx={{
                                     width: '100%',
@@ -203,19 +203,19 @@ const services = [
     {
         title: 'Gender-Affirming Care',
         description: 'Comprehensive services including hormone therapy, surgical consultations, and voice therapy.',
-        image: '/service-1.jpg',
+        image: '/service-1.svg',
         link: '/services#gender-affirming',
     },
     {
         title: 'Mental Health Support',
         description: 'Counseling and therapy services specialized for gender-related experiences and transitions.',
-        image: '/service-2.jpg',
+        image: '/service-2.svg',
         link: '/services#mental-health',
     },
     {
         title: 'Primary Healthcare',
         description: 'Regular check-ups, preventive care, and general health services in an affirming environment.',
-        image: '/service-3.jpg',
+        image: '/service-3.svg',
         link: '/services#primary-care',
     },
 ];
