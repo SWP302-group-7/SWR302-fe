@@ -203,19 +203,19 @@ const services = [
     {
         title: 'Chăm Sóc Khẳng Định Giới Tính',
         description: 'Dịch vụ toàn diện bao gồm liệu pháp hormone, tư vấn phẫu thuật và luyện giọng nói.',
-        image: '/service-1.svg',
+        image: '/genderaff.png',
         link: '/services#gender-affirming',
     },
     {
         title: 'Hỗ Trợ Sức Khỏe Tâm Thần',
         description: 'Dịch vụ tư vấn và trị liệu chuyên biệt cho các trải nghiệm và quá trình chuyển đổi giới tính.',
-        image: '/service-2.svg',
+        image: '/mental.png',
         link: '/services#mental-health',
     },
     {
         title: 'Chăm Sóc Sức Khỏe Cơ Bản',
         description: 'Khám sức khỏe định kỳ, chăm sóc dự phòng và các dịch vụ y tế chung trong môi trường tôn trọng.',
-        image: '/service-3.svg',
+        image: '/primaryhealthy.png',
         link: '/services#primary-care',
     },
 ];

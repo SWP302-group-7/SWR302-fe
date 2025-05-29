@@ -54,6 +54,32 @@ interface TeamMember {
 const TeamPage: React.FC = () => {
     const [tabValue, setTabValue] = React.useState(0);
 
+    // Đọc tabIndex từ localStorage khi component được mount hoặc khi localStorage thay đổi
+    React.useEffect(() => {
+        const selectedTab = localStorage.getItem('selectedTeamTab');
+        if (selectedTab !== null) {
+            const tabIndex = parseInt(selectedTab);
+            setTabValue(tabIndex);
+            // Xóa giá trị sau khi đã sử dụng để tránh ảnh hưởng đến lần sau
+            localStorage.removeItem('selectedTeamTab');
+        }
+    }, []);
+
+    // Lắng nghe sự thay đổi để cập nhật tab khi click dropdown
+    React.useEffect(() => {
+        const handleTabChange = (event: CustomEvent) => {
+            const tabIndex = event.detail.tabIndex;
+            setTabValue(tabIndex);
+        };
+
+        // Lắng nghe custom event từ Header component
+        window.addEventListener('teamTabChange', handleTabChange as EventListener);
+
+        return () => {
+            window.removeEventListener('teamTabChange', handleTabChange as EventListener);
+        };
+    }, []);
+
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };

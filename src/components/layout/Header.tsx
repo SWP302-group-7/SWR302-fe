@@ -24,15 +24,24 @@ const Header: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
+    const [teamMenuOpen, setTeamMenuOpen] = useState(false);
     const servicesButtonRef = useRef<HTMLButtonElement>(null);
+    const teamButtonRef = useRef<HTMLButtonElement>(null);
 
     // Các dịch vụ dropdown với thông tin tab
     const serviceItems = [
-        { name: 'Chăm sóc khẳng định giới tính', path: '/services', tabIndex: 1 },
-        { name: 'Hỗ trợ sức khỏe tâm thần', path: '/services', tabIndex: 2 },
-        { name: 'Chăm sóc sức khỏe cơ bản', path: '/services', tabIndex: 3 },
-        { name: 'Tư vấn giải phẫu', path: '/services', tabIndex: 1 }, // Thuộc tab Chăm sóc khẳng định giới tính
-        { name: 'Liệu pháp giọng nói', path: '/services', tabIndex: 1 }  // Thuộc tab Chăm sóc khẳng định giới tính
+        { name: 'Tất cả', path: '/services', tabIndex: 0 },
+        { name: 'Chăm Sóc Khẳng Định Giới Tính', path: '/services', tabIndex: 1 },
+        { name: 'Sức Khỏe Tâm Thần', path: '/services', tabIndex: 2 },
+        { name: 'Chăm Sóc Cơ Bản', path: '/services', tabIndex: 3 }
+    ];
+
+    // Các danh mục đội ngũ dropdown với thông tin tab
+    const teamItems = [
+        { name: 'Tất Cả', path: '/team', tabIndex: 0 },
+        { name: 'Đội Ngũ Y Tế', path: '/team', tabIndex: 1 },
+        { name: 'Tư Vấn Tâm Lý', path: '/team', tabIndex: 2 },
+        { name: 'Hành Chính', path: '/team', tabIndex: 3 }
     ];
 
     // Kiểm tra đường dẫn hiện tại để xác định nút nào đang được active
@@ -40,12 +49,20 @@ const Header: React.FC = () => {
         if (path === '/services') {
             return location.pathname === path || location.pathname.includes('/services');
         }
+        if (path === '/team') {
+            return location.pathname === path || location.pathname.includes('/team');
+        }
         return location.pathname === path;
     };
 
     // Mở/đóng menu dịch vụ
     const handleServicesMenuToggle = () => {
         setServicesMenuOpen((prevOpen) => !prevOpen);
+    };
+
+    // Mở/đóng menu đội ngũ
+    const handleTeamMenuToggle = () => {
+        setTeamMenuOpen((prevOpen) => !prevOpen);
     };
 
     // Đóng menu dịch vụ khi click ra ngoài
@@ -59,25 +76,55 @@ const Header: React.FC = () => {
         setServicesMenuOpen(false);
     };
 
+    // Đóng menu đội ngũ khi click ra ngoài
+    const handleTeamMenuClose = (event: Event | React.SyntheticEvent) => {
+        if (
+            teamButtonRef.current &&
+            teamButtonRef.current.contains(event.target as HTMLElement)
+        ) {
+            return;
+        }
+        setTeamMenuOpen(false);
+    };
+
     // Xử lý chọn một mục dịch vụ
     const handleServiceItemClick = (tabIndex: number) => {
         setServicesMenuOpen(false);
-        // Lưu tab index vào localStorage để trang dịch vụ biết phải hiển thị tab nào
-        localStorage.setItem('selectedServiceTab', tabIndex.toString());
+
+        // Kiểm tra xem người dùng có đang ở trang dịch vụ không
+        if (location.pathname === '/services') {
+            // Nếu đang ở trang dịch vụ, dispatch custom event để chuyển tab ngay lập tức
+            const event = new CustomEvent('serviceTabChange', {
+                detail: { tabIndex }
+            });
+            window.dispatchEvent(event);
+        } else {
+            // Nếu không ở trang dịch vụ, lưu vào localStorage để chuyển tab khi navigate đến trang dịch vụ
+            localStorage.setItem('selectedServiceTab', tabIndex.toString());
+        }
     };
 
-    // Xử lý khi nhấn vào nút "Tất cả dịch vụ"
-    const handleAllServicesClick = () => {
-        setServicesMenuOpen(false);
-        // Đặt tab index về 0 (tab "Tất cả dịch vụ")
-        localStorage.setItem('selectedServiceTab', '0');
+    // Xử lý chọn một mục đội ngũ
+    const handleTeamItemClick = (tabIndex: number) => {
+        setTeamMenuOpen(false);
+
+        // Kiểm tra xem người dùng có đang ở trang đội ngũ không
+        if (location.pathname === '/team') {
+            // Nếu đang ở trang đội ngũ, dispatch custom event để chuyển tab ngay lập tức
+            const event = new CustomEvent('teamTabChange', {
+                detail: { tabIndex }
+            });
+            window.dispatchEvent(event);
+        } else {
+            // Nếu không ở trang đội ngũ, lưu vào localStorage để chuyển tab khi navigate đến trang đội ngũ
+            localStorage.setItem('selectedTeamTab', tabIndex.toString());
+        }
     };
 
     const navItems = [
         { name: 'Trang chủ', path: '/' },
-        // Dịch vụ được xử lý riêng với dropdown
+        // Dịch vụ và Đội ngũ được xử lý riêng với dropdown
         { name: 'Về chúng tôi', path: '/about' },
-        { name: 'Đội ngũ', path: '/team' },
         { name: 'Liên hệ', path: '/contact' },
     ];
 
@@ -111,26 +158,23 @@ const Header: React.FC = () => {
                             flexGrow: 1
                         }}
                     >
-                        {/* Các mục điều hướng thông thường */}
-                        {navItems.map((item) => (
-                            <Button
-                                key={item.path}
-                                component={RouterLink}
-                                to={item.path}
-                                sx={{
-                                    color: isActive(item.path) ? 'primary.main' : 'text.secondary',
-                                    fontWeight: isActive(item.path) ? 'bold' : 'normal',
-                                    borderBottom: isActive(item.path) ? '2px solid' : 'none',
-                                    borderRadius: 0,
-                                    '&:hover': {
-                                        backgroundColor: 'transparent',
-                                        color: 'primary.main',
-                                    }
-                                }}
-                            >
-                                {item.name}
-                            </Button>
-                        ))}
+                        {/* Trang chủ */}
+                        <Button
+                            component={RouterLink}
+                            to="/"
+                            sx={{
+                                color: isActive('/') ? 'primary.main' : 'text.secondary',
+                                fontWeight: isActive('/') ? 'bold' : 'normal',
+                                borderBottom: isActive('/') ? '2px solid' : 'none',
+                                borderRadius: 0,
+                                '&:hover': {
+                                    backgroundColor: 'transparent',
+                                    color: 'primary.main',
+                                }
+                            }}
+                        >
+                            Trang chủ
+                        </Button>
 
                         {/* Nút Dịch vụ với dropdown */}
                         <Button
@@ -171,26 +215,20 @@ const Header: React.FC = () => {
                                                 id="services-menu"
                                                 aria-labelledby="services-button"
                                             >
-                                                <MenuItem
-                                                    component={RouterLink}
-                                                    to="/services"
-                                                    onClick={handleAllServicesClick}
-                                                    sx={{
-                                                        color: 'primary.main',
-                                                        fontWeight: 'bold',
-                                                        borderLeft: '3px solid',
-                                                        py: 1
-                                                    }}
-                                                >
-                                                    Tất cả dịch vụ
-                                                </MenuItem>
-                                                {serviceItems.map((item) => (
+                                                {serviceItems.map((item, index) => (
                                                     <MenuItem
                                                         key={item.name}
                                                         component={RouterLink}
                                                         to={item.path}
                                                         onClick={() => handleServiceItemClick(item.tabIndex)}
-                                                        sx={{ py: 1 }}
+                                                        sx={{
+                                                            py: 1,
+                                                            ...(index === 0 && {
+                                                                color: 'primary.main',
+                                                                fontWeight: 'bold',
+                                                                borderLeft: '3px solid',
+                                                            })
+                                                        }}
                                                     >
                                                         {item.name}
                                                     </MenuItem>
@@ -201,6 +239,91 @@ const Header: React.FC = () => {
                                 </Grow>
                             )}
                         </Popper>
+
+                        {/* Nút Đội ngũ với dropdown */}
+                        <Button
+                            ref={teamButtonRef}
+                            onClick={handleTeamMenuToggle}
+                            sx={{
+                                color: isActive('/team') ? 'primary.main' : 'text.secondary',
+                                fontWeight: isActive('/team') ? 'bold' : 'normal',
+                                borderBottom: isActive('/team') ? '2px solid' : 'none',
+                                borderRadius: 0,
+                                '&:hover': {
+                                    backgroundColor: 'transparent',
+                                    color: 'primary.main',
+                                }
+                            }}
+                            endIcon={<KeyboardArrowDownIcon />}
+                        >
+                            Đội ngũ
+                        </Button>
+                        <Popper
+                            open={teamMenuOpen}
+                            anchorEl={teamButtonRef.current}
+                            role={undefined}
+                            placement="bottom-start"
+                            transition
+                            disablePortal
+                            sx={{ zIndex: 1300 }}
+                        >
+                            {({ TransitionProps }) => (
+                                <Grow
+                                    {...TransitionProps}
+                                    style={{ transformOrigin: 'top left' }}
+                                >
+                                    <Paper elevation={3} sx={{ mt: 1 }}>
+                                        <ClickAwayListener onClickAway={handleTeamMenuClose}>
+                                            <MenuList
+                                                autoFocusItem={teamMenuOpen}
+                                                id="team-menu"
+                                                aria-labelledby="team-button"
+                                            >
+                                                {teamItems.map((item, index) => (
+                                                    <MenuItem
+                                                        key={item.name}
+                                                        component={RouterLink}
+                                                        to={item.path}
+                                                        onClick={() => handleTeamItemClick(item.tabIndex)}
+                                                        sx={{
+                                                            py: 1,
+                                                            ...(index === 0 && {
+                                                                color: 'primary.main',
+                                                                fontWeight: 'bold',
+                                                                borderLeft: '3px solid',
+                                                            })
+                                                        }}
+                                                    >
+                                                        {item.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </MenuList>
+                                        </ClickAwayListener>
+                                    </Paper>
+                                </Grow>
+                            )}
+                        </Popper>
+
+                        {/* Các mục điều hướng còn lại */}
+                        {navItems.slice(1).map((item) => (
+                            <Button
+                                key={item.path}
+                                component={RouterLink}
+                                to={item.path}
+                                sx={{
+                                    color: isActive(item.path) ? 'primary.main' : 'text.secondary',
+                                    fontWeight: isActive(item.path) ? 'bold' : 'normal',
+                                    borderBottom: isActive(item.path) ? '2px solid' : 'none',
+                                    borderRadius: 0,
+                                    '&:hover': {
+                                        backgroundColor: 'transparent',
+                                        color: 'primary.main',
+                                    }
+                                }}
+                            >
+                                {item.name}
+                            </Button>
+                        ))}
                     </Stack>
 
                     <Box sx={{ display: 'flex', gap: 2 }}>

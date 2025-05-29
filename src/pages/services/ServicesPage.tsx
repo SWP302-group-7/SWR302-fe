@@ -56,14 +56,30 @@ const ServicesPage: React.FC = () => {
     const [tabValue, setTabValue] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Đọc tabIndex từ localStorage khi component được mount
+    // Đọc tabIndex từ localStorage khi component được mount hoặc khi localStorage thay đổi
     useEffect(() => {
         const selectedTab = localStorage.getItem('selectedServiceTab');
         if (selectedTab !== null) {
-            setTabValue(parseInt(selectedTab));
+            const tabIndex = parseInt(selectedTab);
+            setTabValue(tabIndex);
             // Xóa giá trị sau khi đã sử dụng để tránh ảnh hưởng đến lần sau
             localStorage.removeItem('selectedServiceTab');
         }
+    }, []);
+
+    // Lắng nghe sự thay đổi của localStorage để cập nhật tab khi click dropdown
+    useEffect(() => {
+        const handleTabChange = (event: CustomEvent) => {
+            const tabIndex = event.detail.tabIndex;
+            setTabValue(tabIndex);
+        };
+
+        // Lắng nghe custom event từ Header component
+        window.addEventListener('serviceTabChange', handleTabChange as EventListener);
+
+        return () => {
+            window.removeEventListener('serviceTabChange', handleTabChange as EventListener);
+        };
     }, []);
 
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -214,38 +230,45 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
                 image={service.image || '/default-service.jpg'}
                 alt={service.name}
             />
-            <CardContent sx={{ flexGrow: 1 }}>
-                <Box sx={{ mb: 1 }}>
-                    <Chip
-                        label={service.category === 'Gender-Affirming' ? 'Khẳng định giới tính' :
-                            service.category === 'Mental Health' ? 'Sức khỏe tâm thần' :
-                                'Chăm sóc cơ bản'}
-                        color={
-                            service.category === 'Gender-Affirming' ? 'primary' :
-                                service.category === 'Mental Health' ? 'secondary' : 'default'
-                        }
-                        size="small"
-                    />
-                </Box>
-                <Typography gutterBottom variant="h5" component="h2">
-                    {service.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {service.description}
-                </Typography>
-                <Divider sx={{ my: 2 }} />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AccessTimeIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                            {service.duration} phút
-                        </Typography>
+            <CardContent sx={{
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+            }}>
+                <Box>
+                    <Box sx={{ mb: 1 }}>
+                        <Chip
+                            label={service.category === 'Gender-Affirming' ? 'Khẳng định giới tính' :
+                                service.category === 'Mental Health' ? 'Sức khỏe tâm thần' :
+                                    'Chăm sóc cơ bản'}
+                            color={
+                                service.category === 'Gender-Affirming' ? 'primary' :
+                                    service.category === 'Mental Health' ? 'secondary' : 'default'
+                            }
+                            size="small"
+                        />
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AttachMoneyIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                            {service.price}.000 VNĐ
-                        </Typography>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {service.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {service.description}
+                    </Typography>
+                    <Divider sx={{ my: 2 }} />
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <AccessTimeIcon fontSize="small" color="action" />
+                            <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                                {service.duration} phút
+                            </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <AttachMoneyIcon fontSize="small" color="action" />
+                            <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                                {service.price}.000 VNĐ
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
                 <Button
@@ -254,7 +277,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ mt: 2 }}
                     endIcon={<ArrowForwardIcon />}
                 >
                     Đặt Lịch Hẹn
@@ -284,7 +306,7 @@ const services: Service[] = [
         category: 'Gender-Affirming',
         price: 150,
         duration: 60,
-        image: '/service-hormone.jpg',
+        image: '/dv1.jpg',
     },
     {
         id: '2',
@@ -293,7 +315,7 @@ const services: Service[] = [
         category: 'Mental Health',
         price: 120,
         duration: 50,
-        image: '/service-therapy.jpg',
+        image: '/dv2.jpg',
     },
     {
         id: '3',
@@ -302,7 +324,7 @@ const services: Service[] = [
         category: 'Gender-Affirming',
         price: 100,
         duration: 45,
-        image: '/service-voice.jpg',
+        image: '/dv3.jpg',
     },
     {
         id: '4',
@@ -311,7 +333,7 @@ const services: Service[] = [
         category: 'Primary Care',
         price: 200,
         duration: 60,
-        image: '/service-physical.jpg',
+        image: '/dv4.jpg',
     },
     {
         id: '5',
@@ -320,7 +342,7 @@ const services: Service[] = [
         category: 'Gender-Affirming',
         price: 180,
         duration: 90,
-        image: '/service-surgery.jpg',
+        image: '/dv5.jpg',
     },
     {
         id: '6',
@@ -329,7 +351,7 @@ const services: Service[] = [
         category: 'Mental Health',
         price: 110,
         duration: 50,
-        image: '/service-counseling.jpg',
+        image: '/dv6.jpg',
     },
     {
         id: '7',
@@ -338,7 +360,7 @@ const services: Service[] = [
         category: 'Primary Care',
         price: 130,
         duration: 45,
-        image: '/service-sexual-health.jpg',
+        image: '/dv7.jpg',
     },
     {
         id: '8',
@@ -347,7 +369,7 @@ const services: Service[] = [
         category: 'Mental Health',
         price: 40,
         duration: 120,
-        image: '/service-group.jpg',
+        image: '/dv8.jpg',
     },
     {
         id: '9',
@@ -356,7 +378,7 @@ const services: Service[] = [
         category: 'Gender-Affirming',
         price: 120,
         duration: 45,
-        image: '/service-post-transition.jpg',
+        image: '/dv9.jpg',
     },
 ];
 
