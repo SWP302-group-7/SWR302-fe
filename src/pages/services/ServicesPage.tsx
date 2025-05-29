@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Container,
@@ -56,6 +56,32 @@ const ServicesPage: React.FC = () => {
     const [tabValue, setTabValue] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
 
+    // Đọc tabIndex từ localStorage khi component được mount hoặc khi localStorage thay đổi
+    useEffect(() => {
+        const selectedTab = localStorage.getItem('selectedServiceTab');
+        if (selectedTab !== null) {
+            const tabIndex = parseInt(selectedTab);
+            setTabValue(tabIndex);
+            // Xóa giá trị sau khi đã sử dụng để tránh ảnh hưởng đến lần sau
+            localStorage.removeItem('selectedServiceTab');
+        }
+    }, []);
+
+    // Lắng nghe sự thay đổi của localStorage để cập nhật tab khi click dropdown
+    useEffect(() => {
+        const handleTabChange = (event: CustomEvent) => {
+            const tabIndex = event.detail.tabIndex;
+            setTabValue(tabIndex);
+        };
+
+        // Lắng nghe custom event từ Header component
+        window.addEventListener('serviceTabChange', handleTabChange as EventListener);
+
+        return () => {
+            window.removeEventListener('serviceTabChange', handleTabChange as EventListener);
+        };
+    }, []);
+
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
@@ -73,17 +99,17 @@ const ServicesPage: React.FC = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 6 }}>
             <Typography variant="h3" component="h1" gutterBottom>
-                Our Services
+                Dịch Vụ Của Chúng Tôi
             </Typography>
             <Typography variant="subtitle1" paragraph>
-                We offer a comprehensive range of gender-affirming healthcare services designed to meet your unique needs.
+                Chúng tôi cung cấp một loạt các dịch vụ chăm sóc sức khỏe khẳng định giới tính toàn diện được thiết kế để đáp ứng nhu cầu đặc biệt của bạn.
             </Typography>
 
             {/* Search bar */}
             <Box sx={{ mb: 4, mt: 2 }}>
                 <TextField
                     fullWidth
-                    placeholder="Search services..."
+                    placeholder="Tìm kiếm dịch vụ..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     InputProps={{
@@ -106,10 +132,10 @@ const ServicesPage: React.FC = () => {
                     variant="scrollable"
                     scrollButtons="auto"
                 >
-                    <Tab label="All Services" {...a11yProps(0)} />
-                    <Tab label="Gender-Affirming Care" {...a11yProps(1)} />
-                    <Tab label="Mental Health" {...a11yProps(2)} />
-                    <Tab label="Primary Care" {...a11yProps(3)} />
+                    <Tab label="Tất Cả Dịch Vụ" {...a11yProps(0)} />
+                    <Tab label="Chăm Sóc Khẳng Định Giới Tính" {...a11yProps(1)} />
+                    <Tab label="Sức Khỏe Tâm Thần" {...a11yProps(2)} />
+                    <Tab label="Chăm Sóc Cơ Bản" {...a11yProps(3)} />
                 </Tabs>
             </Box>
 
@@ -123,7 +149,7 @@ const ServicesPage: React.FC = () => {
                     ))}
                     {filteredServices.length === 0 && (
                         <Box sx={{ width: '100%', textAlign: 'center', py: 4 }}>
-                            <Typography variant="h6">No services found matching "{searchTerm}"</Typography>
+                            <Typography variant="h6">Không tìm thấy dịch vụ nào phù hợp với "{searchTerm}"</Typography>
                         </Box>
                     )}
                 </Grid>
@@ -139,7 +165,7 @@ const ServicesPage: React.FC = () => {
                     ))}
                     {filterByCategory('Gender-Affirming').length === 0 && (
                         <Box sx={{ width: '100%', textAlign: 'center', py: 4 }}>
-                            <Typography variant="h6">No gender-affirming services found matching "{searchTerm}"</Typography>
+                            <Typography variant="h6">Không tìm thấy dịch vụ khẳng định giới tính nào phù hợp với "{searchTerm}"</Typography>
                         </Box>
                     )}
                 </Grid>
@@ -155,7 +181,7 @@ const ServicesPage: React.FC = () => {
                     ))}
                     {filterByCategory('Mental Health').length === 0 && (
                         <Box sx={{ width: '100%', textAlign: 'center', py: 4 }}>
-                            <Typography variant="h6">No mental health services found matching "{searchTerm}"</Typography>
+                            <Typography variant="h6">Không tìm thấy dịch vụ sức khỏe tâm thần nào phù hợp với "{searchTerm}"</Typography>
                         </Box>
                     )}
                 </Grid>
@@ -171,7 +197,7 @@ const ServicesPage: React.FC = () => {
                     ))}
                     {filterByCategory('Primary Care').length === 0 && (
                         <Box sx={{ width: '100%', textAlign: 'center', py: 4 }}>
-                            <Typography variant="h6">No primary care services found matching "{searchTerm}"</Typography>
+                            <Typography variant="h6">Không tìm thấy dịch vụ chăm sóc cơ bản nào phù hợp với "{searchTerm}"</Typography>
                         </Box>
                     )}
                 </Grid>
@@ -204,36 +230,45 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
                 image={service.image || '/default-service.jpg'}
                 alt={service.name}
             />
-            <CardContent sx={{ flexGrow: 1 }}>
-                <Box sx={{ mb: 1 }}>
-                    <Chip
-                        label={service.category}
-                        color={
-                            service.category === 'Gender-Affirming' ? 'primary' :
-                                service.category === 'Mental Health' ? 'secondary' : 'default'
-                        }
-                        size="small"
-                    />
-                </Box>
-                <Typography gutterBottom variant="h5" component="h2">
-                    {service.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {service.description}
-                </Typography>
-                <Divider sx={{ my: 2 }} />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AccessTimeIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                            {service.duration} min
-                        </Typography>
+            <CardContent sx={{
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+            }}>
+                <Box>
+                    <Box sx={{ mb: 1 }}>
+                        <Chip
+                            label={service.category === 'Gender-Affirming' ? 'Khẳng định giới tính' :
+                                service.category === 'Mental Health' ? 'Sức khỏe tâm thần' :
+                                    'Chăm sóc cơ bản'}
+                            color={
+                                service.category === 'Gender-Affirming' ? 'primary' :
+                                    service.category === 'Mental Health' ? 'secondary' : 'default'
+                            }
+                            size="small"
+                        />
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AttachMoneyIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                            ${service.price}
-                        </Typography>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {service.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {service.description}
+                    </Typography>
+                    <Divider sx={{ my: 2 }} />
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <AccessTimeIcon fontSize="small" color="action" />
+                            <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                                {service.duration} phút
+                            </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <AttachMoneyIcon fontSize="small" color="action" />
+                            <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                                {service.price}.000 VNĐ
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
                 <Button
@@ -242,10 +277,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ mt: 2 }}
                     endIcon={<ArrowForwardIcon />}
                 >
-                    Book Appointment
+                    Đặt Lịch Hẹn
                 </Button>
             </CardContent>
         </Card>
@@ -267,84 +301,84 @@ interface Service {
 const services: Service[] = [
     {
         id: '1',
-        name: 'Hormone Therapy Consultation',
-        description: 'Initial or follow-up consultation for hormone replacement therapy.',
+        name: 'Tư Vấn Liệu Pháp Hormone',
+        description: 'Tư vấn ban đầu hoặc theo dõi cho liệu pháp hormone.',
         category: 'Gender-Affirming',
         price: 150,
         duration: 60,
-        image: '/service-hormone.jpg',
+        image: '/dv1.jpg',
     },
     {
         id: '2',
-        name: 'Gender Therapy Session',
-        description: 'One-on-one therapy session focused on gender identity and transition.',
+        name: 'Trị Liệu Giới Tính',
+        description: 'Buổi trị liệu một-một tập trung vào bản dạng giới và quá trình chuyển đổi.',
         category: 'Mental Health',
         price: 120,
         duration: 50,
-        image: '/service-therapy.jpg',
+        image: '/dv2.jpg',
     },
     {
         id: '3',
-        name: 'Voice and Communication Therapy',
-        description: 'Voice feminization or masculinization therapy with a speech pathologist.',
+        name: 'Trị Liệu Giọng Nói và Giao Tiếp',
+        description: 'Trị liệu làm nữ hóa hoặc nam hóa giọng nói với chuyên gia ngôn ngữ trị liệu.',
         category: 'Gender-Affirming',
         price: 100,
         duration: 45,
-        image: '/service-voice.jpg',
+        image: '/dv3.jpg',
     },
     {
         id: '4',
-        name: 'Annual Physical Exam',
-        description: 'Comprehensive annual health check-up with gender-affirming care providers.',
+        name: 'Khám Sức Khỏe Tổng Quát Hàng Năm',
+        description: 'Kiểm tra sức khỏe tổng quát hàng năm với đội ngũ y tế có hiểu biết về đa dạng giới.',
         category: 'Primary Care',
         price: 200,
         duration: 60,
-        image: '/service-physical.jpg',
+        image: '/dv4.jpg',
     },
     {
         id: '5',
-        name: 'Pre-Surgery Consultation',
-        description: 'Consultation and preparation for gender-affirming surgical procedures.',
+        name: 'Tư Vấn Tiền Phẫu Thuật',
+        description: 'Tư vấn và chuẩn bị cho các thủ thuật phẫu thuật khẳng định giới tính.',
         category: 'Gender-Affirming',
         price: 180,
         duration: 90,
-        image: '/service-surgery.jpg',
+        image: '/dv5.jpg',
     },
     {
         id: '6',
-        name: 'Individual Counseling',
-        description: 'General mental health counseling with gender-specialized therapists.',
+        name: 'Tư Vấn Tâm Lý Cá Nhân',
+        description: 'Tư vấn sức khỏe tâm thần tổng quát với các nhà trị liệu chuyên về giới tính.',
         category: 'Mental Health',
         price: 110,
         duration: 50,
-        image: '/service-counseling.jpg',
+        image: '/dv6.jpg',
     },
     {
         id: '7',
-        name: 'Sexual Health Consultation',
-        description: 'Confidential consultation focused on sexual health needs.',
+        name: 'Tư Vấn Sức Khỏe Tình Dục',
+        description: 'Tư vấn bảo mật tập trung vào nhu cầu sức khỏe tình dục.',
         category: 'Primary Care',
         price: 130,
         duration: 45,
-        image: '/service-sexual-health.jpg',
+        image: '/dv7.jpg',
     },
     {
         id: '8',
-        name: 'Support Group Session',
-        description: 'Facilitated group therapy and support for gender-diverse individuals.',
+        name: 'Buổi Nhóm Hỗ Trợ',
+        description: 'Trị liệu nhóm và hỗ trợ cho các cá nhân đa dạng giới.',
         category: 'Mental Health',
         price: 40,
         duration: 120,
-        image: '/service-group.jpg',
+        image: '/dv8.jpg',
     },
     {
         id: '9',
-        name: 'Post-Transition Care',
-        description: 'Ongoing healthcare services for post-transition individuals.',
+        name: 'Chăm Sóc Sau Chuyển Đổi',
+        description: 'Dịch vụ chăm sóc sức khỏe liên tục cho cá nhân sau quá trình chuyển đổi.',
         category: 'Gender-Affirming',
         price: 120,
         duration: 45,
-        image: '/service-post-transition.jpg',
+        image: '/dv9.jpg',
     },
 ];
 

@@ -89,39 +89,39 @@ const RegisterPage: React.FC = () => {
 
         // First name validation
         if (!formData.firstName.trim()) {
-            errors.firstName = 'First name is required';
+            errors.firstName = 'Họ là bắt buộc';
         }
 
         // Last name validation
         if (!formData.lastName.trim()) {
-            errors.lastName = 'Last name is required';
+            errors.lastName = 'Tên là bắt buộc';
         }
 
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!formData.email.trim()) {
-            errors.email = 'Email is required';
+            errors.email = 'Email là bắt buộc';
         } else if (!emailRegex.test(formData.email)) {
-            errors.email = 'Please enter a valid email address';
+            errors.email = 'Vui lòng nhập một địa chỉ email hợp lệ';
         }
 
         // Password validation
         if (!formData.password) {
-            errors.password = 'Password is required';
+            errors.password = 'Mật khẩu là bắt buộc';
         } else if (formData.password.length < 8) {
-            errors.password = 'Password must be at least 8 characters long';
+            errors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
         }
 
         // Confirm password validation
         if (!formData.confirmPassword) {
-            errors.confirmPassword = 'Please confirm your password';
+            errors.confirmPassword = 'Vui lòng xác nhận mật khẩu của bạn';
         } else if (formData.password !== formData.confirmPassword) {
-            errors.confirmPassword = 'Passwords do not match';
+            errors.confirmPassword = 'Mật khẩu không khớp';
         }
 
         // Terms acceptance validation
         if (!formData.acceptTerms) {
-            errors.acceptTerms = 'You must accept the terms and conditions';
+            errors.acceptTerms = 'Bạn phải đồng ý với điều khoản và điều kiện';
         }
 
         setFormErrors(errors);
@@ -162,7 +162,7 @@ const RegisterPage: React.FC = () => {
                 navigate('/app/profile');
             }, 1500);
         } catch (error) {
-            dispatch(registerFailure('Registration failed. Please try again.'));
+            dispatch(registerFailure('Đăng ký thất bại. Vui lòng thử lại.'));
         }
     };
 
@@ -180,7 +180,7 @@ const RegisterPage: React.FC = () => {
                 <PersonAddIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-                Create Account
+                Tạo Tài Khoản
             </Typography>
 
             {error && (
@@ -197,7 +197,7 @@ const RegisterPage: React.FC = () => {
                             required
                             fullWidth
                             id="firstName"
-                            label="First Name"
+                            label="Họ"
                             autoFocus
                             value={formData.firstName}
                             onChange={handleChange}
@@ -211,7 +211,7 @@ const RegisterPage: React.FC = () => {
                             required
                             fullWidth
                             id="lastName"
-                            label="Last Name"
+                            label="Tên"
                             name="lastName"
                             value={formData.lastName}
                             onChange={handleChange}
@@ -225,7 +225,7 @@ const RegisterPage: React.FC = () => {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="Địa Chỉ Email"
                             name="email"
                             autoComplete="email"
                             value={formData.email}
@@ -240,7 +240,7 @@ const RegisterPage: React.FC = () => {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Mật Khẩu"
                             type={showPassword ? 'text' : 'password'}
                             id="password"
                             autoComplete="new-password"
@@ -269,7 +269,7 @@ const RegisterPage: React.FC = () => {
                             required
                             fullWidth
                             name="confirmPassword"
-                            label="Confirm Password"
+                            label="Xác Nhận Mật Khẩu"
                             type={showPassword ? 'text' : 'password'}
                             id="confirmPassword"
                             value={formData.confirmPassword}
@@ -281,22 +281,22 @@ const RegisterPage: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
-                            <InputLabel id="gender-select-label">Gender</InputLabel>
+                            <InputLabel id="gender-select-label">Giới Tính</InputLabel>
                             <Select
                                 labelId="gender-select-label"
                                 id="gender"
                                 name="gender"
                                 value={formData.gender}
-                                label="Gender"
+                                label="Giới Tính"
                                 onChange={handleSelectChange}
                                 disabled={isLoading}
                             >
-                                <MenuItem value=""><em>Prefer not to say</em></MenuItem>
-                                <MenuItem value="male">Male</MenuItem>
-                                <MenuItem value="female">Female</MenuItem>
-                                <MenuItem value="non-binary">Non-binary</MenuItem>
-                                <MenuItem value="transgender">Transgender</MenuItem>
-                                <MenuItem value="other">Other</MenuItem>
+                                <MenuItem value=""><em>Không muốn nói</em></MenuItem>
+                                <MenuItem value="male">Nam</MenuItem>
+                                <MenuItem value="female">Nữ</MenuItem>
+                                <MenuItem value="non-binary">Phi nhị nguyên</MenuItem>
+                                <MenuItem value="transgender">Chuyển giới</MenuItem>
+                                <MenuItem value="other">Khác</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -304,7 +304,7 @@ const RegisterPage: React.FC = () => {
                         <TextField
                             fullWidth
                             id="dateOfBirth"
-                            label="Date of Birth"
+                            label="Ngày Sinh"
                             name="dateOfBirth"
                             type="date"
                             value={formData.dateOfBirth}
@@ -319,7 +319,7 @@ const RegisterPage: React.FC = () => {
                         <TextField
                             fullWidth
                             id="phone"
-                            label="Phone Number"
+                            label="Số Điện Thoại"
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
@@ -337,7 +337,7 @@ const RegisterPage: React.FC = () => {
                                     disabled={isLoading}
                                 />
                             }
-                            label="I agree to the terms and conditions"
+                            label="Tôi đồng ý với các điều khoản và điều kiện"
                         />
                         {formErrors.acceptTerms && (
                             <FormHelperText error>{formErrors.acceptTerms}</FormHelperText>
@@ -351,12 +351,12 @@ const RegisterPage: React.FC = () => {
                     sx={{ mt: 3, mb: 2 }}
                     disabled={isLoading}
                 >
-                    {isLoading ? <CircularProgress size={24} /> : 'Register'}
+                    {isLoading ? <CircularProgress size={24} /> : 'Đăng Ký'}
                 </Button>
                 <Grid container justifyContent="flex-end">
                     <Grid item>
                         <Link component={RouterLink} to="/auth/login" variant="body2">
-                            Already have an account? Sign in
+                            Đã có tài khoản? Đăng nhập
                         </Link>
                     </Grid>
                 </Grid>

@@ -20,6 +20,9 @@ import ServicesPage from './pages/services/ServicesPage';
 import AppointmentPage from './pages/appointment/AppointmentPage';
 import ConsultationPage from './pages/consultation/ConsultationPage';
 import AdminDashboardPage from './pages/admin/DashboardPage';
+import AboutPage from './pages/about/AboutPage';
+import TeamPage from './pages/team/TeamPage';
+import ContactPage from './pages/contact/ContactPage';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -54,6 +57,9 @@ const AppRoutes: React.FC = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="services" element={<ServicesPage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="team" element={<TeamPage />} />
+        <Route path="contact" element={<ContactPage />} />
 
         {/* Protected Routes */}
         <Route path="app">
