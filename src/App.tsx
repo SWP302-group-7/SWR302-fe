@@ -1,35 +1,122 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { theme } from './theme/theme';
+import { Provider } from 'react-redux';
+import { store } from './store/index.ts';
+import { useSelector } from 'react-redux';
+import type { RootState } from './store/index.ts';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Import layouts
+import MainLayout from './layouts/MainLayout';
+import AuthLayout from './layouts/AuthLayout';
+import AdminLayout from './layouts/AdminLayout';
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+// Import pages
+import HomePage from './pages/home/HomePage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import ProfilePage from './pages/profile/ProfilePage';
+import ServicesPage from './pages/services/ServicesPage';
+import AppointmentPage from './pages/appointment/AppointmentPage';
+import ConsultationPage from './pages/consultation/ConsultationPage';
+import AdminDashboardPage from './pages/admin/DashboardPage';
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  isAuthenticated: boolean;
+  requiredRole?: 'admin' | 'doctor' | 'patient';
+  userRole?: string;
 }
 
-export default App
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  isAuthenticated,
+  requiredRole,
+  userRole
+}) => {
+  if (!isAuthenticated) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  if (requiredRole && userRole !== requiredRole) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const AppRoutes: React.FC = () => {
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+
+  return (
+    <Routes>
+      {/* Main Layout Routes */}
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="services" element={<ServicesPage />} />
+
+        {/* Protected Routes */}
+        <Route path="app">
+          <Route path="profile" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="appointments" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <AppointmentPage />
+            </ProtectedRoute>
+          } />
+          <Route path="consultations" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ConsultationPage />
+            </ProtectedRoute>
+          } />
+        </Route>
+      </Route>
+
+      {/* Auth Layout Routes */}
+      <Route path="/auth" element={<AuthLayout />}>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="reset-password" element={<div>Reset Password Page</div>} />
+      </Route>
+
+      {/* Admin Layout Routes */}
+      <Route path="/admin" element={
+        <ProtectedRoute
+          isAuthenticated={isAuthenticated}
+          requiredRole="admin"
+          userRole={user?.role}
+        >
+          <AdminLayout />
+        </ProtectedRoute>
+      }>
+        <Route index element={<AdminDashboardPage />} />
+        <Route path="users" element={<div>Users Management</div>} />
+        <Route path="appointments" element={<div>Appointments Management</div>} />
+        <Route path="consultations" element={<div>Consultations Management</div>} />
+        <Route path="services" element={<div>Services Management</div>} />
+        <Route path="reports" element={<div>Reports</div>} />
+      </Route>
+
+      {/* Catch-all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+function App() {
+  return (
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <AppRoutes />
+        </Router>
+      </ThemeProvider>
+    </Provider>
+  );
+}
+
+export default App;
