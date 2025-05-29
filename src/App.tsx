@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/index.ts';
 import { useSelector } from 'react-redux';
 import type { RootState } from './store/index.ts';
+import type { AuthState } from './types';
 
 // Import layouts
 import MainLayout from './layouts/MainLayout';
@@ -49,7 +50,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 const AppRoutes: React.FC = () => {
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth as AuthState);
 
   return (
     <Routes>
