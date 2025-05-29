@@ -111,7 +111,7 @@ const AppointmentPage: React.FC = () => {
     const handleBookAppointment = () => {
         // Validate form
         if (!selectedService || !selectedDoctor || !selectedDate || !selectedTime) {
-            setBookingError('Please fill all required fields');
+            setBookingError('Vui lòng điền đầy đủ tất cả các trường bắt buộc');
             return;
         }
 
@@ -139,11 +139,26 @@ const AppointmentPage: React.FC = () => {
         }
     };
 
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'confirmed':
+                return 'Đã xác nhận';
+            case 'pending':
+                return 'Chờ xác nhận';
+            case 'cancelled':
+                return 'Đã hủy';
+            case 'completed':
+                return 'Đã hoàn thành';
+            default:
+                return status;
+        }
+    };
+
     return (
         <Container maxWidth="lg" sx={{ py: 6 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                 <Typography variant="h4" component="h1">
-                    Appointments
+                    Lịch Hẹn
                 </Typography>
                 <Button
                     variant="contained"
@@ -151,7 +166,7 @@ const AppointmentPage: React.FC = () => {
                     startIcon={<AddIcon />}
                     onClick={handleOpenBooking}
                 >
-                    Book New Appointment
+                    Đặt Lịch Hẹn Mới
                 </Button>
             </Box>
 
@@ -161,9 +176,9 @@ const AppointmentPage: React.FC = () => {
                     onChange={handleTabChange}
                     aria-label="appointment tabs"
                 >
-                    <Tab label="Upcoming" {...a11yProps(0)} />
-                    <Tab label="Past" {...a11yProps(1)} />
-                    <Tab label="Cancelled" {...a11yProps(2)} />
+                    <Tab label="Sắp Tới" {...a11yProps(0)} />
+                    <Tab label="Đã Qua" {...a11yProps(1)} />
+                    <Tab label="Đã Hủy" {...a11yProps(2)} />
                 </Tabs>
             </Box>
 
@@ -174,12 +189,13 @@ const AppointmentPage: React.FC = () => {
                             key={appointment.id}
                             appointment={appointment}
                             statusColor={getStatusColor(appointment.status)}
+                            statusLabel={getStatusLabel(appointment.status)}
                         />
                     ))
                 ) : (
                     <Paper sx={{ p: 4, textAlign: 'center' }}>
                         <Typography variant="h6" color="text.secondary" gutterBottom>
-                            No upcoming appointments
+                            Không có lịch hẹn sắp tới
                         </Typography>
                         <Button
                             variant="outlined"
@@ -188,7 +204,7 @@ const AppointmentPage: React.FC = () => {
                             onClick={handleOpenBooking}
                             sx={{ mt: 2 }}
                         >
-                            Book an Appointment
+                            Đặt Lịch Hẹn
                         </Button>
                     </Paper>
                 )}
@@ -201,12 +217,13 @@ const AppointmentPage: React.FC = () => {
                             key={appointment.id}
                             appointment={appointment}
                             statusColor={getStatusColor(appointment.status)}
+                            statusLabel={getStatusLabel(appointment.status)}
                         />
                     ))
                 ) : (
                     <Paper sx={{ p: 4, textAlign: 'center' }}>
                         <Typography variant="h6" color="text.secondary">
-                            No past appointments
+                            Không có lịch hẹn đã qua
                         </Typography>
                     </Paper>
                 )}
@@ -219,12 +236,13 @@ const AppointmentPage: React.FC = () => {
                             key={appointment.id}
                             appointment={appointment}
                             statusColor={getStatusColor(appointment.status)}
+                            statusLabel={getStatusLabel(appointment.status)}
                         />
                     ))
                 ) : (
                     <Paper sx={{ p: 4, textAlign: 'center' }}>
                         <Typography variant="h6" color="text.secondary">
-                            No cancelled appointments
+                            Không có lịch hẹn đã hủy
                         </Typography>
                     </Paper>
                 )}
@@ -233,17 +251,17 @@ const AppointmentPage: React.FC = () => {
             {/* Book Appointment Dialog */}
             <Dialog open={openBooking} onClose={handleCloseBooking} maxWidth="md" fullWidth>
                 <DialogTitle>
-                    {bookingSuccess ? 'Appointment Booked' : 'Book an Appointment'}
+                    {bookingSuccess ? 'Đặt Lịch Hẹn Thành Công' : 'Đặt Lịch Hẹn'}
                 </DialogTitle>
                 <DialogContent>
                     {bookingSuccess ? (
                         <Box sx={{ textAlign: 'center', py: 2 }}>
                             <Alert severity="success" sx={{ mb: 2 }}>
-                                Your appointment has been booked successfully!
+                                Lịch hẹn của bạn đã được đặt thành công!
                             </Alert>
                             <DialogContentText>
-                                You will receive a confirmation email with the details of your appointment.
-                                You can view and manage your appointments on this page.
+                                Bạn sẽ nhận được email xác nhận với chi tiết lịch hẹn của mình.
+                                Bạn có thể xem và quản lý lịch hẹn trên trang này.
                             </DialogContentText>
                         </Box>
                     ) : (
@@ -254,22 +272,22 @@ const AppointmentPage: React.FC = () => {
                                 </Alert>
                             )}
                             <DialogContentText sx={{ mb: 3 }}>
-                                Please fill in the details below to book your appointment.
+                                Vui lòng điền thông tin chi tiết dưới đây để đặt lịch hẹn.
                             </DialogContentText>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <Box>
                                     <FormControl fullWidth required>
-                                        <InputLabel id="service-select-label">Service</InputLabel>
+                                        <InputLabel id="service-select-label">Dịch Vụ</InputLabel>
                                         <Select
                                             labelId="service-select-label"
                                             id="service-select"
                                             value={selectedService}
-                                            label="Service"
+                                            label="Dịch Vụ"
                                             onChange={(e) => setSelectedService(e.target.value)}
                                         >
                                             {services.map((service) => (
                                                 <MenuItem key={service.id} value={service.id}>
-                                                    {service.name} (${service.price}, {service.duration} min)
+                                                    {service.name} ({service.price}.000 VNĐ, {service.duration} phút)
                                                 </MenuItem>
                                             ))}
                                         </Select>
@@ -277,17 +295,17 @@ const AppointmentPage: React.FC = () => {
                                 </Box>
                                 <Box>
                                     <FormControl fullWidth required>
-                                        <InputLabel id="doctor-select-label">Doctor</InputLabel>
+                                        <InputLabel id="doctor-select-label">Bác Sĩ</InputLabel>
                                         <Select
                                             labelId="doctor-select-label"
                                             id="doctor-select"
                                             value={selectedDoctor}
-                                            label="Doctor"
+                                            label="Bác Sĩ"
                                             onChange={(e) => setSelectedDoctor(e.target.value)}
                                         >
                                             {doctors.map((doctor) => (
                                                 <MenuItem key={doctor.id} value={doctor.id}>
-                                                    Dr. {doctor.firstName} {doctor.lastName} ({doctor.specialization})
+                                                    BS. {doctor.firstName} {doctor.lastName} ({doctor.specialization})
                                                 </MenuItem>
                                             ))}
                                         </Select>
@@ -297,7 +315,7 @@ const AppointmentPage: React.FC = () => {
                                     <Box sx={{ flex: 1 }}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                                             <DatePicker
-                                                label="Date"
+                                                label="Ngày"
                                                 value={selectedDate}
                                                 onChange={setSelectedDate}
                                                 minDate={new Date()}
@@ -307,12 +325,12 @@ const AppointmentPage: React.FC = () => {
                                     </Box>
                                     <Box sx={{ flex: 1 }}>
                                         <FormControl fullWidth required>
-                                            <InputLabel id="time-select-label">Time</InputLabel>
+                                            <InputLabel id="time-select-label">Giờ</InputLabel>
                                             <Select
                                                 labelId="time-select-label"
                                                 id="time-select"
                                                 value={selectedTime}
-                                                label="Time"
+                                                label="Giờ"
                                                 onChange={(e) => setSelectedTime(e.target.value)}
                                             >
                                                 {timeSlots.map((slot) => (
@@ -328,7 +346,7 @@ const AppointmentPage: React.FC = () => {
                                     <TextField
                                         fullWidth
                                         id="notes"
-                                        label="Notes (Optional)"
+                                        label="Ghi Chú (Không bắt buộc)"
                                         multiline
                                         rows={3}
                                         value={notes}
@@ -341,11 +359,11 @@ const AppointmentPage: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseBooking}>
-                        {bookingSuccess ? 'Close' : 'Cancel'}
+                        {bookingSuccess ? 'Đóng' : 'Hủy'}
                     </Button>
                     {!bookingSuccess && (
                         <Button onClick={handleBookAppointment} variant="contained" color="primary">
-                            Book Appointment
+                            Đặt Lịch Hẹn
                         </Button>
                     )}
                 </DialogActions>
@@ -357,9 +375,10 @@ const AppointmentPage: React.FC = () => {
 interface AppointmentCardProps {
     appointment: Appointment;
     statusColor: string;
+    statusLabel: string;
 }
 
-const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, statusColor }) => {
+const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, statusColor, statusLabel }) => {
     return (
         <Card sx={{ mb: 2 }}>
             <CardContent>
@@ -371,12 +390,12 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, statusCo
                         <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                             <PersonIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
                             <Typography variant="body2" color="text.secondary">
-                                Dr. {appointment.doctorName}
+                                BS. {appointment.doctorName}
                             </Typography>
                         </Box>
                     </Box>
                     <Chip
-                        label={appointment.status}
+                        label={statusLabel}
                         sx={{
                             backgroundColor: statusColor,
                             color: '#fff',
@@ -403,7 +422,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, statusCo
                     <Box sx={{ width: { xs: '100%', sm: 'calc(33.333% - 8px)' }, display: 'flex', alignItems: 'center' }}>
                         <MedicalServicesIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
                         <Typography variant="body2">
-                            Appointment ID: {appointment.id.substring(0, 8)}
+                            Mã lịch hẹn: {appointment.id.substring(0, 8)}
                         </Typography>
                     </Box>
                 </Box>
@@ -416,7 +435,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, statusCo
                             size="small"
                             startIcon={<CloseIcon />}
                         >
-                            Cancel Appointment
+                            Hủy Lịch Hẹn
                         </Button>
                     </Box>
                 )}
@@ -427,33 +446,33 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, statusCo
 
 // Sample data
 const timeSlots = [
-    '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
-    '11:00 AM', '11:30 AM', '01:00 PM', '01:30 PM',
-    '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM',
-    '04:00 PM', '04:30 PM'
+    '09:00', '09:30', '10:00', '10:30',
+    '11:00', '11:30', '13:00', '13:30',
+    '14:00', '14:30', '15:00', '15:30',
+    '16:00', '16:30'
 ];
 
 const services: Service[] = [
     {
         id: '1',
-        name: 'Hormone Therapy Consultation',
-        description: 'Initial or follow-up consultation for hormone replacement therapy.',
+        name: 'Tư Vấn Liệu Pháp Hormone',
+        description: 'Tư vấn ban đầu hoặc theo dõi cho liệu pháp thay thế hormone.',
         category: 'Gender-Affirming',
         price: 150,
         duration: 60,
     },
     {
         id: '2',
-        name: 'Gender Therapy Session',
-        description: 'One-on-one therapy session focused on gender identity and transition.',
+        name: 'Buổi Trị Liệu Giới Tính',
+        description: 'Buổi trị liệu một-một tập trung vào bản dạng giới và quá trình chuyển đổi.',
         category: 'Mental Health',
         price: 120,
         duration: 50,
     },
     {
         id: '3',
-        name: 'Voice and Communication Therapy',
-        description: 'Voice feminization or masculinization therapy with a speech pathologist.',
+        name: 'Trị Liệu Giọng Nói và Giao Tiếp',
+        description: 'Trị liệu làm nữ hóa hoặc nam hóa giọng nói với chuyên gia ngôn ngữ trị liệu.',
         category: 'Gender-Affirming',
         price: 100,
         duration: 45,
@@ -465,30 +484,30 @@ const doctors: Doctor[] = [
         id: '1',
         firstName: 'Sarah',
         lastName: 'Johnson',
-        specialization: 'Endocrinology',
+        specialization: 'Nội tiết học',
         experience: 8,
         gender: 'female',
-        bio: 'Specializes in hormone therapy for gender transition.',
+        bio: 'Chuyên về liệu pháp hormone cho chuyển đổi giới tính.',
         available: true,
     },
     {
         id: '2',
         firstName: 'Michael',
         lastName: 'Chen',
-        specialization: 'Psychiatry',
+        specialization: 'Tâm thần học',
         experience: 12,
         gender: 'male',
-        bio: 'Expertise in gender identity and mental health support during transition.',
+        bio: 'Chuyên môn về bản dạng giới và hỗ trợ sức khỏe tâm thần trong quá trình chuyển đổi.',
         available: true,
     },
     {
         id: '3',
         firstName: 'Aisha',
         lastName: 'Khan',
-        specialization: 'Speech Therapy',
+        specialization: 'Trị liệu ngôn ngữ',
         experience: 6,
         gender: 'female',
-        bio: 'Voice feminization and masculinization specialist.',
+        bio: 'Chuyên gia về làm nữ hóa và nam hóa giọng nói.',
         available: true,
     },
 ];
@@ -499,26 +518,26 @@ const upcomingAppointments: Appointment[] = [
         patientId: '1',
         doctorId: '1',
         serviceId: '1',
-        date: '2023-06-15',
-        startTime: '10:00 AM',
-        endTime: '11:00 AM',
+        date: '15/06/2023',
+        startTime: '10:00',
+        endTime: '11:00',
         status: 'confirmed',
-        patientName: 'Demo User',
+        patientName: 'Người dùng Demo',
         doctorName: 'Sarah Johnson',
-        serviceName: 'Hormone Therapy Consultation',
+        serviceName: 'Tư Vấn Liệu Pháp Hormone',
     },
     {
         id: 'apt12346',
         patientId: '1',
         doctorId: '2',
         serviceId: '2',
-        date: '2023-06-22',
-        startTime: '02:30 PM',
-        endTime: '03:20 PM',
+        date: '22/06/2023',
+        startTime: '14:30',
+        endTime: '15:20',
         status: 'pending',
-        patientName: 'Demo User',
+        patientName: 'Người dùng Demo',
         doctorName: 'Michael Chen',
-        serviceName: 'Gender Therapy Session',
+        serviceName: 'Buổi Trị Liệu Giới Tính',
     },
 ];
 
@@ -528,13 +547,13 @@ const pastAppointments: Appointment[] = [
         patientId: '1',
         doctorId: '1',
         serviceId: '1',
-        date: '2023-05-05',
-        startTime: '09:30 AM',
-        endTime: '10:30 AM',
+        date: '05/05/2023',
+        startTime: '09:30',
+        endTime: '10:30',
         status: 'completed',
-        patientName: 'Demo User',
+        patientName: 'Người dùng Demo',
         doctorName: 'Sarah Johnson',
-        serviceName: 'Hormone Therapy Consultation',
+        serviceName: 'Tư Vấn Liệu Pháp Hormone',
     },
 ];
 
@@ -544,13 +563,13 @@ const cancelledAppointments: Appointment[] = [
         patientId: '1',
         doctorId: '3',
         serviceId: '3',
-        date: '2023-05-20',
-        startTime: '01:00 PM',
-        endTime: '01:45 PM',
+        date: '20/05/2023',
+        startTime: '13:00',
+        endTime: '13:45',
         status: 'cancelled',
-        patientName: 'Demo User',
+        patientName: 'Người dùng Demo',
         doctorName: 'Aisha Khan',
-        serviceName: 'Voice and Communication Therapy',
+        serviceName: 'Trị Liệu Giọng Nói và Giao Tiếp',
     },
 ];
 
