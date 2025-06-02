@@ -22,6 +22,8 @@ import {
     LocationOn as LocationIcon,
     AccessTime as TimeIcon,
 } from '@mui/icons-material';
+import GoogleMap from '../../components/GoogleMap';
+import { GOOGLE_MAPS_CONFIG, DEFAULT_MARKERS, getGoogleMapsApiKey } from '../../config/maps';
 
 const ContactPage: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -277,21 +279,14 @@ const ContactPage: React.FC = () => {
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
                 <Paper elevation={2} sx={{ p: 2, bgcolor: 'background.default' }}>
-                    {/* Placeholder for Google Maps */}
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: 400,
-                            bgcolor: '#eee',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Typography variant="body1" color="text.secondary">
-                            Bản đồ Google Maps sẽ được hiển thị ở đây
-                        </Typography>
-                    </Box>
+                    <GoogleMap
+                        center={GOOGLE_MAPS_CONFIG.CLINIC_LOCATION}
+                        zoom={GOOGLE_MAPS_CONFIG.DEFAULT_ZOOM}
+                        markers={DEFAULT_MARKERS}
+                        height={400}
+                        width="100%"
+                        apiKey={getGoogleMapsApiKey()}
+                    />
                 </Paper>
             </Box>
         </Container>

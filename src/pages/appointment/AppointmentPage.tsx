@@ -35,10 +35,7 @@ import {
     Close as CloseIcon,
     Add as AddIcon,
 } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import { Appointment, Doctor, Service } from '../../types';
-import { format } from 'date-fns';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -80,8 +77,6 @@ const AppointmentPage: React.FC = () => {
     const [notes, setNotes] = useState('');
     const [bookingSuccess, setBookingSuccess] = useState(false);
     const [bookingError, setBookingError] = useState('');
-
-    const { user } = useSelector((state: RootState) => state.auth);
 
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);

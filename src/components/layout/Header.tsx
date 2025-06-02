@@ -8,7 +8,6 @@ import {
     Button,
     IconButton,
     Stack,
-    Menu,
     MenuItem,
     Popper,
     Grow,
@@ -16,13 +15,12 @@ import {
     ClickAwayListener,
     MenuList
 } from '@mui/material';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import icongender from '../../images/icongender.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Header: React.FC = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
     const [teamMenuOpen, setTeamMenuOpen] = useState(false);
     const servicesButtonRef = useRef<HTMLButtonElement>(null);
