@@ -24,6 +24,8 @@ import AdminDashboardPage from './pages/admin/DashboardPage';
 import AboutPage from './pages/about/AboutPage';
 import TeamPage from './pages/team/TeamPage';
 import ContactPage from './pages/contact/ContactPage';
+import CycleTrackingPage from './pages/cycle/CycleTrackingPage';
+import ConsultationQAPage from './pages/consultation/ConsultationQAPage';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -77,6 +79,16 @@ const AppRoutes: React.FC = () => {
           <Route path="consultations" element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <ConsultationPage />
+            </ProtectedRoute>
+          } />
+          <Route path="cycle-tracking" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <CycleTrackingPage />
+            </ProtectedRoute>
+          } />
+          <Route path="qa" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ConsultationQAPage />
             </ProtectedRoute>
           } />
         </Route>
