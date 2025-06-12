@@ -80,10 +80,10 @@ function a11yProps(index: number) {
 }
 
 interface AppointmentHistoryProps {
-    userId: string;
+    // userId parameter removed as it's not being used
 }
 
-const AppointmentHistory: React.FC<AppointmentHistoryProps> = ({ userId }) => {
+const AppointmentHistory: React.FC<AppointmentHistoryProps> = () => {
     // In a real app, we would fetch this data from an API based on userId
     const appointments: Appointment[] = [
         {
@@ -160,10 +160,10 @@ const AppointmentHistory: React.FC<AppointmentHistoryProps> = ({ userId }) => {
 };
 
 interface MedicalRecordsProps {
-    userId: string;
+    // userId parameter removed as it's not being used
 }
 
-const MedicalRecords: React.FC<MedicalRecordsProps> = ({ userId }) => {
+const MedicalRecords: React.FC<MedicalRecordsProps> = () => {
     return (
         <Box>
             <Typography variant="h6" gutterBottom>
@@ -498,10 +498,10 @@ const ProfilePage: React.FC = () => {
                     </Tabs>
                 </Box>
                 <TabPanel value={tabValue} index={0}>
-                    <AppointmentHistory userId={user.id} />
+                    <AppointmentHistory />
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>
-                    <MedicalRecords userId={user.id} />
+                    <MedicalRecords />
                 </TabPanel>
             </Box>
 

@@ -8,7 +8,6 @@ import {
     Button,
     IconButton,
     Stack,
-    Menu,
     MenuItem,
     Popper,
     Grow,
@@ -16,13 +15,12 @@ import {
     ClickAwayListener,
     MenuList
 } from '@mui/material';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import icongender from '../../images/icongender.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Header: React.FC = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
     const [teamMenuOpen, setTeamMenuOpen] = useState(false);
     const servicesButtonRef = useRef<HTMLButtonElement>(null);
@@ -51,6 +49,9 @@ const Header: React.FC = () => {
         }
         if (path === '/team') {
             return location.pathname === path || location.pathname.includes('/team');
+        }
+        if (path === '/app/cycle-tracking') {
+            return location.pathname === path;
         }
         return location.pathname === path;
     };
@@ -90,16 +91,12 @@ const Header: React.FC = () => {
     // Xử lý chọn một mục dịch vụ
     const handleServiceItemClick = (tabIndex: number) => {
         setServicesMenuOpen(false);
-
-        // Kiểm tra xem người dùng có đang ở trang dịch vụ không
         if (location.pathname === '/services') {
-            // Nếu đang ở trang dịch vụ, dispatch custom event để chuyển tab ngay lập tức
             const event = new CustomEvent('serviceTabChange', {
                 detail: { tabIndex }
             });
             window.dispatchEvent(event);
         } else {
-            // Nếu không ở trang dịch vụ, lưu vào localStorage để chuyển tab khi navigate đến trang dịch vụ
             localStorage.setItem('selectedServiceTab', tabIndex.toString());
         }
     };
@@ -107,16 +104,12 @@ const Header: React.FC = () => {
     // Xử lý chọn một mục đội ngũ
     const handleTeamItemClick = (tabIndex: number) => {
         setTeamMenuOpen(false);
-
-        // Kiểm tra xem người dùng có đang ở trang đội ngũ không
         if (location.pathname === '/team') {
-            // Nếu đang ở trang đội ngũ, dispatch custom event để chuyển tab ngay lập tức
             const event = new CustomEvent('teamTabChange', {
                 detail: { tabIndex }
             });
             window.dispatchEvent(event);
         } else {
-            // Nếu không ở trang đội ngũ, lưu vào localStorage để chuyển tab khi navigate đến trang đội ngũ
             localStorage.setItem('selectedTeamTab', tabIndex.toString());
         }
     };
@@ -239,6 +232,42 @@ const Header: React.FC = () => {
                                 </Grow>
                             )}
                         </Popper>
+
+                        {/* Theo dõi chu kì */}
+                        <Button
+                            component={RouterLink}
+                            to="/app/cycle-tracking"
+                            sx={{
+                                color: isActive('/app/cycle-tracking') ? 'primary.main' : 'text.secondary',
+                                fontWeight: isActive('/app/cycle-tracking') ? 'bold' : 'normal',
+                                borderBottom: isActive('/app/cycle-tracking') ? '2px solid' : 'none',
+                                borderRadius: 0,
+                                '&:hover': {
+                                    backgroundColor: 'transparent',
+                                    color: 'primary.main',
+                                }
+                            }}
+                        >
+                            Theo dõi chu kì
+                        </Button>
+
+                        {/* Tư vấn & Giải đáp */}
+                        <Button
+                            component={RouterLink}
+                            to="/app/qa"
+                            sx={{
+                                color: isActive('/app/qa') ? 'primary.main' : 'text.secondary',
+                                fontWeight: isActive('/app/qa') ? 'bold' : 'normal',
+                                borderBottom: isActive('/app/qa') ? '2px solid' : 'none',
+                                borderRadius: 0,
+                                '&:hover': {
+                                    backgroundColor: 'transparent',
+                                    color: 'primary.main',
+                                }
+                            }}
+                        >
+                            Tư vấn & Giải đáp
+                        </Button>
 
                         {/* Nút Đội ngũ với dropdown */}
                         <Button

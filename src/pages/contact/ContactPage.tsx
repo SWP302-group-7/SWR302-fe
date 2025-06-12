@@ -22,6 +22,7 @@ import {
     LocationOn as LocationIcon,
     AccessTime as TimeIcon,
 } from '@mui/icons-material';
+import mapImage from '../../images/map/mapttyte.png';
 
 const ContactPage: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -277,21 +278,16 @@ const ContactPage: React.FC = () => {
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
                 <Paper elevation={2} sx={{ p: 2, bgcolor: 'background.default' }}>
-                    {/* Placeholder for Google Maps */}
                     <Box
+                        component="img"
+                        src={mapImage}
+                        alt="Bản đồ đường đi đến trung tâm y tế"
                         sx={{
                             width: '100%',
-                            height: 400,
-                            bgcolor: '#eee',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                            height: 'auto',
+                            objectFit: 'cover',
                         }}
-                    >
-                        <Typography variant="body1" color="text.secondary">
-                            Bản đồ Google Maps sẽ được hiển thị ở đây
-                        </Typography>
-                    </Box>
+                    />
                 </Paper>
             </Box>
         </Container>
