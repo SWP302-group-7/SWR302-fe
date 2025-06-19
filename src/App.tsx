@@ -1,36 +1,42 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import { theme } from './theme/theme';
-import { Provider } from 'react-redux';
-import { store } from './store/index.ts';
-import { useSelector } from 'react-redux';
-import type { RootState } from './store/index.ts';
-import type { AuthState } from './types';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { theme } from "./theme/theme";
+import { Provider } from "react-redux";
+import { store } from "./store/index.ts";
+import { useSelector } from "react-redux";
+import type { RootState } from "./store/index.ts";
+import type { AuthState } from "./types";
 
 // Import layouts
-import MainLayout from './layouts/MainLayout';
-import AuthLayout from './layouts/AuthLayout';
-import AdminLayout from './layouts/AdminLayout';
+import MainLayout from "./layouts/MainLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import AdminLayout from "./layouts/AdminLayout";
 
 // Import pages
-import HomePage from './pages/home/HomePage';
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
-import ProfilePage from './pages/profile/ProfilePage';
-import ServicesPage from './pages/services/ServicesPage';
-import AppointmentPage from './pages/appointment/AppointmentPage';
-import ConsultationPage from './pages/consultation/ConsultationPage';
-import AdminDashboardPage from './pages/admin/DashboardPage';
-import AboutPage from './pages/about/AboutPage';
-import TeamPage from './pages/team/TeamPage';
-import ContactPage from './pages/contact/ContactPage';
-import CycleTrackingPage from './pages/cycle/CycleTrackingPage';
-import ConsultationQAPage from './pages/consultation/ConsultationQAPage';
+import HomePage from "./pages/home/HomePage";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import ProfilePage from "./pages/profile/ProfilePage";
+import ServicesPage from "./pages/services/ServicesPage";
+import AppointmentPage from "./pages/appointment/AppointmentPage";
+import ConsultationPage from "./pages/consultation/ConsultationPage";
+import AdminDashboardPage from "./pages/admin/DashboardPage";
+import AboutPage from "./pages/about/AboutPage";
+import TeamPage from "./pages/team/TeamPage";
+import ContactPage from "./pages/contact/ContactPage";
+import CycleTrackingPage from "./pages/cycle/CycleTrackingPage";
+import ConsultationQAPage from "./pages/consultation/ConsultationQAPage";
+import BlogPage from "./pages/blog/BlogPage";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   isAuthenticated: boolean;
-  requiredRole?: 'admin' | 'doctor' | 'patient';
+  requiredRole?: "admin" | "doctor" | "patient";
   userRole?: string;
 }
 
@@ -38,7 +44,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   isAuthenticated,
   requiredRole,
-  userRole
+  userRole,
 }) => {
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" replace />;
@@ -52,7 +58,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 const AppRoutes: React.FC = () => {
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth as AuthState);
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth as AuthState
+  );
 
   return (
     <Routes>
@@ -60,37 +68,53 @@ const AppRoutes: React.FC = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="services" element={<ServicesPage />} />
+        <Route path="blog" element={<BlogPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="team" element={<TeamPage />} />
         <Route path="contact" element={<ContactPage />} />
 
         {/* Protected Routes */}
         <Route path="app">
-          <Route path="profile" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <ProfilePage />
-            </ProtectedRoute>
-          } />
-          <Route path="appointments" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <AppointmentPage />
-            </ProtectedRoute>
-          } />
-          <Route path="consultations" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <ConsultationPage />
-            </ProtectedRoute>
-          } />
-          <Route path="cycle-tracking" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <CycleTrackingPage />
-            </ProtectedRoute>
-          } />
-          <Route path="qa" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <ConsultationQAPage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="appointments"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <AppointmentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="consultations"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ConsultationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="cycle-tracking"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <CycleTrackingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="qa"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ConsultationQAPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Route>
 
@@ -102,19 +126,28 @@ const AppRoutes: React.FC = () => {
       </Route>
 
       {/* Admin Layout Routes */}
-      <Route path="/admin" element={
-        <ProtectedRoute
-          isAuthenticated={isAuthenticated}
-          requiredRole="admin"
-          userRole={user?.role}
-        >
-          <AdminLayout />
-        </ProtectedRoute>
-      }>
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute
+            isAuthenticated={isAuthenticated}
+            requiredRole="admin"
+            userRole={user?.role}
+          >
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<AdminDashboardPage />} />
         <Route path="users" element={<div>Users Management</div>} />
-        <Route path="appointments" element={<div>Appointments Management</div>} />
-        <Route path="consultations" element={<div>Consultations Management</div>} />
+        <Route
+          path="appointments"
+          element={<div>Appointments Management</div>}
+        />
+        <Route
+          path="consultations"
+          element={<div>Consultations Management</div>}
+        />
         <Route path="services" element={<div>Services Management</div>} />
         <Route path="reports" element={<div>Reports</div>} />
       </Route>
